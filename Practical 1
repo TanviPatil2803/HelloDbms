@@ -1,0 +1,80 @@
+create database bank;
+use bank;
+
+create table customer
+(
+	c_id int(5),
+	cname varchar(30),
+	city varchar(30),
+	primary key(c_id)
+);
+
+create table account
+(
+	c_id int(5),
+	acc_type varchar(20),
+	amount int(15),
+	foreign key (c_id) references customer(c_id)
+);
+
+insert into customer values
+(1, 'John', 'Nashik'),
+(2, 'Seema', 'Aurangabad'),
+(3, 'Amita', 'Nagar'),
+(4, 'Rakesh', 'Pune'),
+(5, 'Samata', 'Nashik'),
+(6, 'Ankita', 'Chanwad'),
+(7, 'Bhavika', 'Pune'),
+(8, 'Deepa', 'Mumbai'),
+(9, 'Nitin','Nagpur'), 
+(10, 'Pooja', 'Pune');
+
+insert into account values
+(1, 'Current', 5000),
+(2, 'Saving', 20000),
+(3, 'Saving', 70000),
+(4, 'Saving', 50000),
+(6, 'Current', 35000),
+(7, 'Loan', 30000),
+(8, 'Saving', 50000),
+(9, 'Saving', 90000),
+(10, 'Loan', 8000);
+
+1. 
+select c.cname, a.acc_type, a.amount
+from customer c
+JOIN account a on c.c_id = a.c_id
+where a.acc_type = 'Saving';
+
+2. 
+select c.cname, a.acc_type, a.amount
+from customer c
+natural join account a;
+
+select c.cname, a.acc_type, a.amount
+from customer c
+left join account a on c.c_id = a.c_id;
+
+select c.cname, a.acc_type, a.amount
+from customer c
+right join account a on c.c_id = a.c_id;
+
+3.
+select * from customer c
+where c.city = (select city from customer where cname = 'Pooja');
+
+4. 
+select c_id from account where amount < (select avg(amount) from account);
+
+5. 
+select c_id from account where amount = (select min(amount) from account);
+
+6. 
+select a.c_id, a.acc_type, a.amount
+FROM account a
+WHERE a.amount = (select min(amount) from account where acc_type = a.acc_type);
+
+7. 
+select a.amount
+from account a
+where a.amount > (select max(amount) from account where acc_type = 'Saving');
