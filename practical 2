@@ -1,0 +1,76 @@
+
+create table book_borrower(
+roll_no number(4) primary key,
+name varchar(20),
+dateofissue date,
+nameofbook varchar(20),
+status varchar(20));
+
+insert into book_borrower values(101,'saurabh','11-MAY-23','ASUR','I');
+insert into book_borrower values(102,'arya','11-JUN-23','ANANT','I');
+
+
+
+create table fine(
+roll_no references book_borrower(roll_no),
+fdate date,
+amount number(5));
+
+===============================================================
+declare
+mroll number(5);
+mbookname varchar(20);
+missuedate date;
+mcurrentdate date;
+numberofdays number(5);
+fineamt number(5);
+
+begin
+
+mroll:=&mroll;
+mbookname:=&mbookname;
+
+select dateofissue into missuedate from book_borrower where roll_no=mroll and nameofbook=mbookname;
+
+
+mcurrentdate:=sysdate;
+
+numberofdays:=mcurrentdate-missuedate;
+
+dbms_output.put_line(numberofdays);
+if numberofdays>=15 and numberofdays<=30 then
+fineamt:=numberofdays*5;
+
+insert into fine values(mroll,mcurrentdate,fineamt);
+
+elsif numberofdays>30 then
+fineamt:=numberofdays*50;
+insert into fine values(mroll,mcurrentdate,fineamt);
+
+else
+fineamt:=0;
+
+end if;
+
+update book_borrower set status='R' where roll_no=mroll and nameofbook=mbookname;
+
+
+exception
+
+when no_data_found then
+dbms_output.put_line('enter valid details');
+
+
+end;
+
+=====================================================================
+WHAT TO ENTER IN INPUT
+
+Enter value for mroll: 101
+
+Enter value for mbookname: 'ASUR'
+
+
+PL/SQL procedure successfully completed.
+
+ select * from fine;
