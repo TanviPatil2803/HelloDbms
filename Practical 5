@@ -1,0 +1,70 @@
+create table o_RollCall
+(
+	roll number(5),
+	name varchar(20)
+);
+
+insert into o_rollcall values(101,'saurabh');
+insert into o_rollcall values(102,'arya');
+insert into o_rollcall values(103,'shraddha');
+insert into o_rollcall values(104,'shruti');
+
+create table n_RollCall(
+roll number(5),
+name varchar(20));
+
+insert into n_rollcall values(101,'saurabh');
+insert into n_rollcall values(103,'shraddha');
+
+==cursor should insert now record of arya and shruti automatically--->
+
+declare
+
+cursor curr_old is select * from o_rollcall;
+
+cursor curr_new(mname varchar) is select roll from n_rollcall where name=mname;
+
+mroll o_rollcall.roll%type;
+mname o_rollcall.name%type;
+temproll number(10);
+
+begin
+open curr_old;
+
+if curr_old%isopen then
+loop
+
+fetch curr_old into mroll,mname;
+
+exit when curr_old%notfound;
+
+if curr_old%found then
+	open curr_new(mname);
+	
+	fetch curr_new into temproll;
+
+	if curr_new%found then
+	
+	dbms_output.put_line(mroll);
+	dbms_output.put_line(' and name: ');
+	dbms_output.put_line(mname);
+	dbms_output.put_line('are present in new table');
+
+	else
+	dbms_output.put_line(mroll);
+	dbms_output.put_line('inserting into new table');	
+	insert into n_rollcall values(mroll,mname);
+
+	end if;
+
+	close curr_new;
+
+end if;
+
+end loop;
+
+end if;
+
+end;
+
+/
