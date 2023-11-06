@@ -1,0 +1,74 @@
+2. Write a stored function in PL/SQL for given requirement and use the same in PL/SQL block.
+Account no. and branch name will be accepted from user. The same will be searched in table
+acct_details. If status of account is active then display appropriate message and also store the account
+details in active_acc_details table, otherwise display message on screen “account is inactive”.
+
+
+create table acc_details(
+acc_no number(5),
+bname varchar(20),
+status varchar(20));
+
+
+insert into acc_details values(101,'SBI','active');
+
+insert into acc_details values(102,'RBI','not active');
+
+create table active_acc_details(
+acc_no number(5),
+bname varchar(20),
+);
+
+
+
+-->ans
+
+create or replace function check_account(macc_no number,mbname varchar)
+return number
+is
+mstatus varchar(20);
+temp number(5);
+begin
+select status into mstatus from acc_details where acc_no=macc_no and bname=mbname;
+
+if mstatus='active' then
+temp:=1;
+insert into active_acc_details values(macc_no,mbname);
+
+else
+temp:=0;
+
+end if;
+
+return temp;
+
+exception
+
+when no_data_found then
+dbms_output.put_line('bank not found ');
+
+end;
+
+
+*calling block
+
+declare
+macc_no number(5);
+mbname varchar(20);
+mstatus varchar(20);
+temp number(5);
+begin
+
+macc_no:=&macc_no;
+mbname:=&mbname;
+temp:=check_account(macc_no,mbname);
+
+if temp=1 then 
+
+dbms_output.put_line('ACCOUNT IS ACTIVE DETAILS INSERTED INTO OTHER TABLE');
+else
+dbms_output.put_line('ACCOUNT IS NOT ACTIVE DETAILS ARE NOT INSERTED INTO OTHER TABLE');
+
+end if;
+
+end;
