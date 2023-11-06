@@ -1,0 +1,41 @@
+create table library1
+(
+	book_no number(10),
+	book_name varchar2(50),
+	no_of_copy number(10)
+);
+
+insert into library1 values(1, 'abc', 2);
+insert into library1 values(2, 'xyz', 3);
+
+create table library_audit1
+(
+	book_no number(10),
+	book_name varchar2(50),
+	no_of_copy number(10),
+	operation varchar2(20)
+);
+
+
+delete from library1 where book_no = 1;
+
+
+==row level trigger
+
+create or replace trigger library_t1 after update or delete on library1 for each row
+declare 
+op varchar(20);
+
+begin 
+
+if deleting then
+op:='delete';
+insert into library_audit1 values(:old.book_no,:old.book_name,:old.no_of_copy, op);
+end if;
+
+if updating then
+op:='update';
+insert into library_audit1 values(:old.book_no,:old.book_name,:old.no_of_copy, op);
+end if;
+
+end;
