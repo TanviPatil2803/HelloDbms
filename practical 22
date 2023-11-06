@@ -1,0 +1,34 @@
+db.orderinfo.insert({
+  cust_id: 123,
+  cust_name: "abc",
+  status: "A",
+  price: 250
+})
+
+db.orderinfo.insertOne({
+  cust_id: 124,
+  cust_name: "xyz",
+  status: "A",
+  price: 500
+})
+
+db.orderinfo.insertOne({
+  cust_id: 234,
+  cust_name: "lmn",
+  status: "B",
+  price: 1200
+})
+
+
+1.
+db.orderinfo.find({price : {$gte : 250 , $lte : 250}} , { cust_name : 1, _id : 0})
+
+2. 
+db.orderinfo.update({cust_id : 123}, {$inc : {price : 10}})
+db.orderinfo.update({cust_id : 124}, {$inc : {price : -5}})
+
+3. 
+db.orderinfo.updateMany({}, {$unset : {Age : ""}})
+
+4.
+db.orderinfo.find({$or : [{status : "A"}, {price : 250}]}, {cust_name : 1, _id : 0})
