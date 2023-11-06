@@ -1,0 +1,34 @@
+
+db.orderinfo.insert({
+  cust_id: 123,
+  cust_name: "abc",
+  status: "A",
+  price: 250
+})
+
+db.orderinfo.insertOne({
+  cust_id: 124,
+  cust_name: "xyz",
+  status: "A",
+  price: 500
+})
+
+db.orderinfo.insertOne({
+  cust_id: 234,
+  cust_name: "lmn",
+  status: "B",
+  price: 1200
+})
+
+
+1.
+db.orderinfo.updateMany({}, {$set : {Age : null}})
+
+2. 
+db.orderinfo.createIndex({cust_id : 1, status : 1}, {unique : true})
+
+3. 
+db.orderinfo.aggregate([{$group : {_id : "$status", average_price : {$avg : "$price"}}}])
+
+4. 
+db.orderinfo.updateMany({status : 'B'}, {$set : {cust_name : "Arya"}})
